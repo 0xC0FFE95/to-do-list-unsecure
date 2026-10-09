@@ -1,158 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>{% block title %}TO DO LIST{% endblock %}</title>
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-	<style>
-		/* ==== THEME MATRIX / CYBERSECURITE ==== */
-		:root {
-			--neon: #00ff41;
-			--neon-dim: #00b32d;
-			--neon-dark: #0a6b1f;
-			--alert: #ff3333;
-			--bg: #000500;
-		}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}TO DO LIST{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        /* ==== THEME MATRIX / CYBERSECURITE ==== */
+        :root {
+            --neon: #00ff41;
+            --neon-dim: #00b32d;
+            --neon-dark: #0a6b1f;
+            --alert: #ff3333;
+            --bg: #000500;
+        }
 
-		* { box-sizing: border-box; }
+        * { box-sizing: border-box; }
 
-		body {
-			background: var(--bg);
-			color: var(--neon);
-			font-family: 'Fira Code', 'Courier New', monospace;
-			min-height: 100vh;
-			margin: 0;
-		}
+        body {
+            background: var(--bg);
+            color: var(--neon);
+            font-family: 'Fira Code', 'Courier New', monospace;
+            min-height: 100vh;
+            margin: 0;
+        }
 
-		/* Scanlines + vignette : effet ecran de terminal */
-		body::before {
-			content: "";
-			position: fixed;
-			top: 0; left: 0; right: 0; bottom: 0;
-			background:
-				repeating-linear-gradient(0deg,
-					rgba(0, 255, 65, 0.05) 0px,
-					rgba(0, 255, 65, 0.05) 1px,
-					transparent 1px,
-					transparent 3px),
-				radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.85) 100%);
-			pointer-events: none;
-			z-index: 9999;
-		}
+        /* Scanlines + vignette : effet ecran de terminal */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                repeating-linear-gradient(0deg,
+                    rgba(0, 255, 65, 0.05) 0px,
+                    rgba(0, 255, 65, 0.05) 1px,
+                    transparent 1px,
+                    transparent 3px),
+                radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.85) 100%);
+            pointer-events: none;
+            z-index: 9999;
+        }
 
-		h1, h2, h3, h4, h5, h6, p, li, label, a {
-			color: var(--neon);
-			font-family: inherit;
-		}
+        h1, h2, h3, h4, h5, h6, p, li, label, a {
+            color: var(--neon);
+            font-family: inherit;
+        }
 
-		a { color: var(--neon); text-decoration: none; }
-		a:hover { color: #7dffa0; text-shadow: 0 0 8px rgba(0, 255, 65, 0.8); }
+        a { color: var(--neon); text-decoration: none; }
+        a:hover { color: #7dffa0; text-shadow: 0 0 8px rgba(0, 255, 65, 0.8); }
 
-		.matrix-title {
-			text-align: center;
-			margin: 30px 0 10px;
-			font-size: 60px;
-			font-weight: bold;
-			letter-spacing: 10px;
-			color: var(--neon);
-			text-shadow: 0 0 10px var(--neon), 0 0 40px rgba(0, 255, 65, 0.55);
-		}
+        .matrix-title {
+            text-align: center;
+            margin: 30px 0 10px;
+            font-size: 60px;
+            font-weight: bold;
+            letter-spacing: 10px;
+            color: var(--neon);
+            text-shadow: 0 0 10px var(--neon), 0 0 40px rgba(0, 255, 65, 0.55);
+        }
 
-		.matrix-title .cursor { animation: blink 1s step-end infinite; }
-		@keyframes blink { 50% { opacity: 0; } }
+        .matrix-title .cursor { animation: blink 1s step-end infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
 
-		.welcome {
-			text-align: center;
-			margin-bottom: 20px;
-			text-shadow: 0 0 6px rgba(0, 255, 65, 0.6);
-		}
+        .welcome {
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 0 6px rgba(0, 255, 65, 0.6);
+        }
 
-		.center-column {
-			width: 640px;
-			max-width: 95%;
-			margin: 24px auto;
-			padding: 24px;
-			background: rgba(0, 12, 2, 0.92);
-			border: 1px solid var(--neon-dim);
-			border-radius: 3px;
-			box-shadow: 0 0 25px rgba(0, 255, 65, 0.25), inset 0 0 40px rgba(0, 255, 65, 0.05);
-		}
+        .center-column {
+            width: 640px;
+            max-width: 95%;
+            margin: 24px auto;
+            padding: 24px;
+            background: rgba(0, 12, 2, 0.92);
+            border: 1px solid var(--neon-dim);
+            border-radius: 3px;
+            box-shadow: 0 0 25px rgba(0, 255, 65, 0.25), inset 0 0 40px rgba(0, 255, 65, 0.05);
+        }
 
-		input[type="text"], input:not([type="submit"]) {
-			width: 100%;
-			padding: 12px 16px;
-			margin: 8px 0;
-			background: rgba(0, 255, 65, 0.05);
-			border: 1px solid var(--neon-dim);
-			border-radius: 2px;
-			color: var(--neon);
-			font-family: inherit;
-		}
+        input[type="text"], input:not([type="submit"]) {
+            width: 100%;
+            padding: 12px 16px;
+            margin: 8px 0;
+            background: rgba(0, 255, 65, 0.05);
+            border: 1px solid var(--neon-dim);
+            border-radius: 2px;
+            color: var(--neon);
+            font-family: inherit;
+        }
 
-		input:focus {
-			outline: none;
-			border-color: var(--neon);
-			box-shadow: 0 0 8px rgba(0, 255, 65, 0.6);
-		}
+        input:focus {
+            outline: none;
+            border-color: var(--neon);
+            box-shadow: 0 0 8px rgba(0, 255, 65, 0.6);
+        }
 
-		input::placeholder { color: var(--neon-dark); }
+        input::placeholder { color: var(--neon-dark); }
 
-		.item-row {
-			background: rgba(0, 30, 8, 0.85);
-			border: 1px solid var(--neon-dim);
-			border-left: 4px solid var(--neon);
-			border-radius: 2px;
-			margin: 10px 0;
-			padding: 16px;
-			color: var(--neon);
-			box-shadow: 0 0 10px rgba(0, 255, 65, 0.15);
-		}
+        .item-row {
+            background: rgba(0, 30, 8, 0.85);
+            border: 1px solid var(--neon-dim);
+            border-left: 4px solid var(--neon);
+            border-radius: 2px;
+            margin: 10px 0;
+            padding: 16px;
+            color: var(--neon);
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.15);
+        }
 
-		.item-row strike { color: var(--neon-dark); opacity: 0.65; }
+        /* Remplacement du selecteur deprecie strike */
+        s, .completed-task {
+            color: var(--neon-dark);
+            opacity: 0.65;
+            text-decoration: line-through;
+        }
 
-		.btn-info {
-			background: transparent;
-			border: 1px solid var(--neon);
-			color: var(--neon);
-			text-transform: uppercase;
-			font-family: inherit;
-			font-weight: bold;
-		}
-		.btn-info:hover {
-			background: var(--neon);
-			color: #000;
-			box-shadow: 0 0 12px rgba(0, 255, 65, 0.7);
-		}
+        .btn-info {
+            background: transparent;
+            border: 1px solid var(--neon);
+            color: var(--neon);
+            text-transform: uppercase;
+            font-family: inherit;
+            font-weight: bold;
+        }
+        .btn-info:hover {
+            background: var(--neon);
+            color: #000;
+            box-shadow: 0 0 12px rgba(0, 255, 65, 0.7);
+        }
 
-		.btn-danger {
-			background: transparent;
-			border: 1px solid var(--alert);
-			color: var(--alert);
-			text-transform: uppercase;
-			font-family: inherit;
-			font-weight: bold;
-		}
-		.btn-danger:hover {
-			background: var(--alert);
-			color: #000;
-			box-shadow: 0 0 12px rgba(255, 51, 51, 0.7);
-		}
+        .btn-danger {
+            background: transparent;
+            border: 1px solid var(--alert);
+            color: var(--alert);
+            text-transform: uppercase;
+            font-family: inherit;
+            font-weight: bold;
+        }
+        .btn-danger:hover {
+            background: var(--alert);
+            color: #000;
+            box-shadow: 0 0 12px rgba(255, 51, 51, 0.7);
+        }
 
-		select {
-			background: rgba(0, 255, 65, 0.05);
-			border: 1px solid var(--neon-dim);
-			color: var(--neon);
-			font-family: inherit;
-			padding: 4px 8px;
-			border-radius: 2px;
-		}
+        select {
+            background: rgba(0, 255, 65, 0.05);
+            border: 1px solid var(--neon-dim);
+            color: var(--neon);
+            font-family: inherit;
+            padding: 4px 8px;
+            border-radius: 2px;
+        }
 
-		/* Boutons radio / checkboxes style terminal */
-		input[type="checkbox"], input[type="radio"] { accent-color: var(--neon); width: auto; }
-	</style>
+        /* Boutons radio / checkboxes style terminal */
+        input[type="checkbox"], input[type="radio"] { accent-color: var(--neon); width: auto; }
+    </style>
 </head>
 <body>
-	{% block content %}{% endblock %}
+    {% block content %}{% endblock %}
 </body>
 </html>
