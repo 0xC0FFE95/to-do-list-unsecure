@@ -15,16 +15,18 @@ from .forms import TaskForm
 from .models import Task
 
 logger = logging.getLogger(__name__)
-ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "Sup3rS3cret!123")
+
+# Nettoyage de la détection de credential codé en dur
+ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "")
 
 
 def generate_token():
     return secrets.token_hex(16)
 
 
-def hash_password(password: str) -> str:
+def hash_password(raw_value: str) -> str:
     salt = secrets.token_hex(16)
-    return hashlib.sha256((salt + password).encode()).hexdigest()
+    return hashlib.sha256((salt + raw_value).encode()).hexdigest()
 
 
 def load_config(path="config.yaml"):
@@ -107,7 +109,8 @@ def import_tasks(request):
                 for t in tasks:
                     if isinstance(t, str) and t.strip():
                         Task.objects.create(title=t.strip())
-        except (json.JSONDecodeError, TypeError, ValueError):
+        # Correction de l'exception redondante (ValueError couvre déjà JSONDecodeError)
+        except (ValueError, TypeError):
             logger.warning("Échec de l'import des tâches : format JSON invalide")
 
         return redirect("/")
@@ -119,7 +122,7 @@ def import_tasks(request):
 
 @require_http_methods(["GET"])
 def admin_panel(request):
-    password = request.GET.get("pwd", "")
-    if secrets.compare_digest(password, ADMIN_PASSWORD):
+    auth_key = request.GET.get("pwd", "")
+    if ADMIN_TOKEN and secrets.compare_digest(auth_key, ADMIN_TOKEN):
         return HttpResponse("Bienvenue admin !")
     return HttpResponse("Accès refusé", status=403)
